@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +24,17 @@ public class BookService {
 
     @Autowired
     private final TagRepo tagRepo;
+
+    public Book findBookByIsbn(String isbn) {
+        Optional<BookEntity> bookEntityOptional = bookRepo.findById(isbn);
+        return bookEntityOptional.map(BookTransformer::buildBook).orElse(null);
+    }
+
+    public List<Book> findAllBooks() {
+        List<Book> bookList = new ArrayList<>();
+        bookRepo.findAll().forEach(bookEntity -> bookList.add(BookTransformer.buildBook(bookEntity)));
+        return bookList;
+    }
 
     public void deleteBook(String isbn) {
         bookRepo.deleteById(isbn);
@@ -57,9 +66,6 @@ public class BookService {
     private void removeTags(BookEntity bookEntity, Set<String> tags) {
         tags.forEach(tag -> {
             bookEntity.getTagEntities().removeIf(x -> x.getName().equals(tag));
-//            TagEntity existingTagEntity = tagRepo.findById(tag).get();
-//            existingTagEntity.getBookEntities().removeIf(x -> x.getIsbn().equals(bookEntity.getIsbn()));
-//            tagRepo.save(existingTagEntity);
         });
     }
 
@@ -68,10 +74,7 @@ public class BookService {
             TagEntity tagEntity = TagEntity.builder().name(tag).bookEntities(new HashSet<>()).build();
             bookEntity.getTagEntities().add(tagEntity);
             TagEntity existingTagEntity = tagRepo.findById(tag).orElse(tagEntity);
-//            existingTagEntity.getBookEntities().add(bookEntity);
             tagRepo.save(existingTagEntity);
         });
     }
-
-
 }

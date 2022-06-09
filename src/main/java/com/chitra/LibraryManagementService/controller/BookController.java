@@ -1,16 +1,15 @@
 package com.chitra.LibraryManagementService.controller;
 
 import com.chitra.LibraryManagementService.model.Book;
-import com.chitra.LibraryManagementService.model.BookEntity;
 import com.chitra.LibraryManagementService.repository.BookRepo;
 import com.chitra.LibraryManagementService.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,23 +24,24 @@ public class BookController {
     private BookRepo bookRepo;
 
     @GetMapping
-    public List<BookEntity> findAllBooks() {
-        List<BookEntity> response = new ArrayList<>();
-        bookRepo.findAll().forEach(response::add);
-        return response;
+    public List<Book> findAllBooks() {
+        return bookService.findAllBooks();
     }
 
     @GetMapping("/{isbn}")
-    public BookEntity findByIsbn(@PathVariable String isbn) {
-        if (isbn == null || isbn.isBlank()) {
+    public Book findBookByIsbn(@PathVariable String isbn) {
+        if (StringUtils.isBlank(isbn)) {
             return null;
         }
-        return bookRepo.findById(isbn.trim()).orElse(null);
+        return bookService.findBookByIsbn(isbn.trim());
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Book createBook(@Valid @RequestBody Book book) {
+        if (book.getIsbn() == null || book.getTitle() == null || book.getAuthor() == null) {
+            return null;
+        }
         return bookService.saveBook(book);
     }
 

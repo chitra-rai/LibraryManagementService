@@ -1,6 +1,6 @@
 package com.chitra.LibraryManagementService.controller;
 
-import com.chitra.LibraryManagementService.helper.CSVHelper;
+import com.chitra.LibraryManagementService.helper.CsvHelper;
 import com.chitra.LibraryManagementService.model.Book;
 import com.chitra.LibraryManagementService.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ public class UploadController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public List<Book> uploadFile(@RequestParam("file") MultipartFile file) {
-        if (!CSVHelper.hasCSVFormat(file)) {
+        if (!CsvHelper.hasCSVFormat(file)) {
             return Collections.emptyList();
         }
 
         try {
-            List<Book> bookList = CSVHelper.csvToBookEntity(file.getInputStream());
+            List<Book> bookList = CsvHelper.csvToBookEntity(file.getInputStream());
             return bookService.saveAllBooks(bookList);
         } catch (IOException e) {
             throw new RuntimeException(String.format("Failed to upload CSV file. Reason: %s", e.getMessage()));

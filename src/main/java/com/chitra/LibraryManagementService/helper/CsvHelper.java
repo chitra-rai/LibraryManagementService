@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CSVHelper {
+public class CsvHelper {
     public static final String TYPE = "text/csv";
     private static final String HEADER_ISBN = "ISBN";
     private static final String HEADER_TITLE = "Title";
