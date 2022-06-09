@@ -1,0 +1,1 @@
+insert into BOOK values ('978-0486284736', 'Jane', 'Pride and Prejudice')
