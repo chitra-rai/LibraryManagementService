@@ -20,9 +20,6 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private BookRepo bookRepo;
-
     @GetMapping
     public List<Book> findAllBooks() {
         return bookService.findAllBooks();
@@ -38,8 +35,8 @@ public class BookController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Book createBook(@Valid @RequestBody Book book) {
-        if (book.getIsbn() == null || book.getTitle() == null || book.getAuthor() == null) {
+    public Book createBook(@RequestBody Book book) {
+        if (book == null || book.getIsbn() == null || book.getTitle() == null || book.getAuthor() == null) {
             return null;
         }
         return bookService.saveBook(book);
