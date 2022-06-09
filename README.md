@@ -12,6 +12,8 @@ to submit requests for different APIs.
 
 Alternatively, build and run the project using maven from command line.
 
+Currently, unit-tests are only written for book controller and unit-tests for other classes are marked as ToDo.
+
 ## API details
 1. GET localhost:8080/books/ : Gets all the books
 2. POST localhost:8080/books/ : Add a book to the library where book details are passed as JSON object in form-data
